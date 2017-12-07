@@ -1,0 +1,28 @@
+import org.checkerframework.checker.guieffect.qual.*;
+
+package io.reactivex;
+
+@PolyUIType
+class Scheduler { }
+
+@PolyUIType
+class Single<T> implements SingleSource<T> {
+  @PolyUI Single<T> observeOn(@AnyThread Single<T> this, @PolyUI Scheduler arg0);
+  <R> @PolyUI R to(@PolyUI Single<T> this, Function<? super Single<T>,R> arg0);
+}
+
+@PolyUIType
+class Maybe<T> implements MaybeSource<T> {
+  @PolyUI Maybe<T> doOnComplete(@PolyUI Maybe<T> this, @UI Action arg0);
+}
+
+package io.reactivex.schedulers;
+class Schedulers {
+    static @UI Scheduler single();
+}
+
+package io.reactivex.functions;
+@PolyUIType
+interface Action {
+    @PolyUIEffect void run();
+}

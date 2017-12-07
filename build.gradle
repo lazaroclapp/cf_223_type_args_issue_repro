@@ -1,0 +1,38 @@
+plugins {
+  id "java"
+}
+
+sourceCompatibility = "1.8"
+targetCompatibility = "1.8"
+
+ext.targetJavaVersion = JavaVersion.current().isJava8() ? JavaVersion.VERSION_1_8 : JavaVersion.VERSION_1_9
+
+configurations {
+    checkerFrameworkJavac {
+        description = 'a customization of the Open JDK javac compiler with additional support for type annotations'
+    }
+    checkerFrameworkAnnotatedJDK {
+       description = 'a copy of JDK classes with Checker Framework type qualifers inserted'
+    }
+}
+
+dependencies {
+    compile "io.reactivex:rxjava:1.3.4"
+    compile "io.reactivex.rxjava2:rxjava:2.1.2"
+    ext.checkerFrameworkVersion = '2.3.0'
+    ext.jdkVersion = 'jdk8'
+    checkerFrameworkAnnotatedJDK "org.checkerframework:${jdkVersion}:${checkerFrameworkVersion}"
+    checkerFrameworkJavac "org.checkerframework:compiler:${checkerFrameworkVersion}"
+    compileOnly "org.checkerframework:checker:${checkerFrameworkVersion}"
+    compile "org.checkerframework:checker-qual:${checkerFrameworkVersion}"
+}
+
+allprojects {
+    tasks.withType(JavaCompile).all { JavaCompile compile ->
+        compile.doFirst {
+            options.fork = true
+            options.forkOptions.jvmArgs += ["-Xbootclasspath/p:${configurations.checkerFrameworkJavac.asPath}"]
+            options.compilerArgs += ["-processor", "org.checkerframework.checker.tainting.TaintingChecker"/*"org.checkerframework.checker.guieffect.GuiEffectChecker"*/,"-Astubs=${projectDir}", "-AprintErrorStack"]
+        }
+    }
+}
