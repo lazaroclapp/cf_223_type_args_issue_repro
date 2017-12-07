@@ -10,7 +10,6 @@ import io.reactivex.functions.Function;
 
 import io.reactivex.schedulers.Schedulers;
 
-/*>>>import org.checkerframework.checker.guieffect.qual.*;*/
 /*>>>import org.checkerframework.checker.tainting.qual.*;*/
 
 class Example {
@@ -74,7 +73,7 @@ class Example {
         .observeOn(Schedulers.single())
         .to(Example.singleTupleToTwoParamMaybe())
         .doOnComplete(
-            new /*@UI*/ Action() {
+            new Action() {
               @Override
               public void run() throws Exception {
               }
@@ -86,7 +85,7 @@ class Example {
         .observeOn(Schedulers.single())
         .to(Example.<Object,Object>singleTupleToTwoParamMaybe())
         .doOnComplete(
-            new /*@UI*/ Action() {
+            new Action() {
               @Override
               public void run() throws Exception {
               }
